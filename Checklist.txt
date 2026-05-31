@@ -1,0 +1,4 @@
+Checklist:
+1. For calculation, put invalid if NoiseSource_DUT values are lower than NoiseSource only. Thats physically impossible
+2. When i first load the page, i get invalid input, because it sees an empty string, which cannot be converted to int. But then the page reloads and i can input numbers. Where in the code makes it work that way
+

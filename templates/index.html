@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Y-Factor Noise Figure Calculator | RF Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f5f5f3;
+      --surface:   #ffffff;
+      --surface2:  #f0f0ee;
+      --border:    #e2e2de;
+      --border2:   #d0d0cc;
+      --text:      #1a1a18;
+      --text2:     #6b6b67;
+      --text3:     #9f9f9b;
+      --green:     #1d9e75;
+      --green-dk:  #0F6E56;
+      --green-bg:  #E1F5EE;
+      --green-br:  #9FE1CB;
+      --blue:      #185FA5;
+      --blue-dk:   #0C447C;
+      --red-bg:    #fef2f2;
+      --red-br:    #fca5a5;
+      --red-text:  #b91c1c;
+    }
+
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+    }
+
+    .page-header {
+      max-width: 1400px;
+      margin: 0 auto 1.25rem;
+    }
+    .page-title {
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .page-sub {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    .two-col {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .col {
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 1.375rem;
+      border: 0.5px solid var(--border);
+    }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.875rem;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot-green { background: var(--green); }
+    .dot-blue  { background: var(--blue); }
+    .col-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .col-sub {
+      font-size: 10px;
+      color: var(--text3);
+      margin-left: auto;
+    }
+
+    .slabel {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slabel::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
+    .slabel-green { color: var(--green-dk); }
+    .slabel-blue  { color: var(--blue); }
+
+    .group {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      padding: 0.875rem 0.875rem 0.125rem;
+      margin-bottom: 0.875rem;
+    }
+    .enr-group {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      padding: 0.875rem;
+      margin-bottom: 0.875rem;
+    }
+
+    .field { margin-bottom: 12px; }
+    .field-label {
+      font-size: 11px;
+      color: var(--text2);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .field-label span { font-size: 10px; color: var(--text3); }
+
+    .state-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+    .tag-off {
+      background: var(--surface2);
+      color: var(--text2);
+      border: 0.5px solid var(--border2);
+    }
+    .tag-on {
+      background: var(--green-bg);
+      color: var(--green-dk);
+      border: 0.5px solid var(--green-br);
+    }
+
+    .input-row { display: flex; }
+    input[type="number"] {
+      flex: 1;
+      height: 34px;
+      background: var(--surface);
+      border: 0.5px solid var(--border2);
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      padding: 0 8px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus { border-color: var(--green); }
+    input[type="number"]::placeholder { color: var(--text3); }
+    .unit-badge {
+      height: 34px;
+      padding: 0 8px;
+      background: var(--surface2);
+      border: 0.5px solid var(--border2);
+      border-left: none;
+      border-radius: 0 6px 6px 0;
+      font-size: 10px;
+      color: var(--text3);
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .calc-btn {
+      width: 100%;
+      height: 42px;
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 0.375rem;
+      transition: background 0.15s;
+    }
+    .calc-btn:hover { background: var(--green-dk); }
+    .calc-btn:active { background: #085041; }
+    .calc-btn:disabled { background: var(--border2); cursor: not-allowed; }
+
+    .result-box {
+      display: none;
+      margin-top: 1rem;
+      border-top: 0.5px solid var(--border);
+      padding-top: 1rem;
+    }
+    .result-inner {
+      background: var(--green-bg);
+      border: 0.5px solid var(--green-br);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .result-val {
+      font-size: 40px;
+      font-weight: 500;
+      color: var(--green-dk);
+    }
+    .result-unit { font-size: 14px; color: var(--green); }
+    .result-name {
+      font-size: 10px;
+      color: #3d6b5a;
+      margin-left: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .err-box {
+      display: none;
+      font-size: 11px;
+      color: var(--red-text);
+      background: var(--red-bg);
+      border: 0.5px solid var(--red-br);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    /* Right column */
+    .ref-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      margin-bottom: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ref-logo { font-size: 12px; font-weight: 500; }
+    .ref-logo em { color: var(--blue); font-style: normal; }
+    .ref-note { font-size: 10px; color: var(--text3); margin-top: 2px; }
+    .ref-btn {
+      height: 30px;
+      padding: 0 12px;
+      background: var(--blue);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .ref-btn:hover { background: var(--blue-dk); }
+
+    .screen-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .screen-slot {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .screen-hdr {
+      padding: 6px 8px;
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .screen-tag-off { font-size: 10px; font-weight: 500; color: var(--text2); }
+    .screen-tag-on  { font-size: 10px; font-weight: 500; color: var(--green-dk); }
+    .screen-var     { font-size: 10px; color: var(--text3); }
+    .screen-img {
+      width: 100%;
+      min-height: 280px;
+      background: var(--surface2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      /* Replace background with: background-image: url('/static/img/YOUR_SCREENSHOT.png');
+         background-size: cover; background-position: center; */
+    }
+    .screen-img-placeholder { font-size: 10px; color: var(--text3); text-align: center; line-height: 1.5; }
+    .screen-foot { font-size: 10px; color: var(--text3); padding: 5px 8px; border-top: 0.5px solid var(--border); }
+
+    /* Ad slot */
+    .ad-slot {
+      max-width: 1400px;
+      margin: 1.5rem auto 0;
+      background: var(--surface);
+      border: 0.5px dashed var(--border2);
+      border-radius: 8px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 700px) {
+      .two-col { grid-template-columns: 1fr; }
+      .screen-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="page-title">Y-Factor Noise Figure Calculator</div>
+  </div>
+
+  <div class="two-col">
+
+    <!-- LEFT COLUMN: Inputs -->
+    <div class="col">
+      <div class="col-header">
+        <div class="dot dot-green"></div>
+        <span class="col-title">Inputs</span>
+        <span class="col-sub">Y-Factor</span>
+      </div>
+
+      <div class="slabel slabel-green">Calibration &mdash; noise source only</div>
+      <div class="group">
+        <div class="field">
+          <div class="field-label">Noise source OFF <span>N<sub>src,off</sub></span></div>
+          <div><span class="state-tag tag-off">OFF</span></div>
+          <div class="input-row">
+            <input type="number" id="ns_off" step="0.1" placeholder="-110.0">
+            <span class="unit-badge">dBm</span>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">Noise source ON <span>N<sub>src,on</sub></span></div>
+          <div><span class="state-tag tag-on">ON</span></div>
+          <div class="input-row">
+            <input type="number" id="ns_on" step="0.1" placeholder="-95.0">
+            <span class="unit-badge">dBm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel slabel-green">Measurement &mdash; noise source + DUT</div>
+      <div class="group">
+        <div class="field">
+          <div class="field-label">Noise source OFF <span>N<sub>dut,off</sub></span></div>
+          <div><span class="state-tag tag-off">OFF</span></div>
+          <div class="input-row">
+            <input type="number" id="dut_off" step="0.1" placeholder="-90.0">
+            <span class="unit-badge">dBm</span>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">Noise source ON <span>N<sub>dut,on</sub></span></div>
+          <div><span class="state-tag tag-on">ON</span></div>
+          <div class="input-row">
+            <input type="number" id="dut_on" step="0.1" placeholder="-75.0">
+            <span class="unit-badge">dBm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel slabel-green">Noise source parameters</div>
+      <div class="enr-group">
+        <div class="field-label">Excess noise ratio <span>ENR<sub>dB</sub></span></div>
+        <div class="input-row" style="margin-top:4px;">
+          <input type="number" id="enr" step="0.01" placeholder="15.20">
+          <span class="unit-badge">dB &middot; from noise source</span>
+        </div>
+      </div>
+
+      <div class="err-box" id="err"></div>
+
+      <button class="calc-btn" id="calc-btn" onclick="calculate()">
+        Calculate noise figure
+      </button>
+
+      <div class="result-box" id="result-box">
+        <div class="slabel slabel-green">Result</div>
+        <div class="result-inner">
+          <span class="result-val" id="result-val">—</span>
+          <span class="result-unit">dB</span>
+          <span class="result-name">DUT noise figure</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Reference & Examples -->
+    <div class="col">
+      <div class="col-header">
+        <div class="dot dot-blue"></div>
+        <span class="col-title">Reference &amp; examples</span>
+      </div>
+
+      <div class="slabel slabel-blue">Application note</div>
+      <div class="ref-card">
+        <div style="flex:1;">
+          <div class="ref-logo">Rohde <em>&amp;</em> Schwarz</div>
+          <div class="ref-note">1MA178 &middot; The Y-Factor Technique for Noise Figure Measurements</div>
+        </div>
+        <a class="ref-btn" href="https://scdn.rohde-schwarz.com/ur/pws/dl_downloads/dl_application/application_notes/1ma178/1MA178_5e_NoiseFigure.pdf" target="_blank" rel="noopener">
+          &#x2197; Open PDF
+        </a>
+      </div>
+
+      <div class="slabel slabel-blue">Example measurements</div>
+      <div class="screen-grid">
+
+        <div class="screen-slot">
+          <div class="screen-hdr">
+            <span class="screen-tag-off">OFF &middot; src only</span>
+            <span class="screen-var">N<sub>src,off</sub></span>
+          </div>
+          <div class="screen-img">
+            <!-- Replace contents with: <img src="/static/img/ns_off.png" style="width:100%;height:100%;object-fit:cover;"> -->
+            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
+            <span class="screen-img-placeholder">No DUT &middot; cold state</span>
+          </div>
+          <div class="screen-foot">Calibration step 1</div>
+        </div>
+
+        <div class="screen-slot">
+          <div class="screen-hdr">
+            <span class="screen-tag-on">ON &middot; src only</span>
+            <span class="screen-var">N<sub>src,on</sub></span>
+          </div>
+          <div class="screen-img">
+            <!-- Replace contents with: <img src="/static/img/ns_on.png" style="width:100%;height:100%;object-fit:cover;"> -->
+            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
+            <span class="screen-img-placeholder">No DUT &middot; hot state</span>
+          </div>
+          <div class="screen-foot">Calibration step 2</div>
+        </div>
+
+        <div class="screen-slot">
+          <div class="screen-hdr">
+            <span class="screen-tag-off">OFF &middot; src + DUT</span>
+            <span class="screen-var">N<sub>dut,off</sub></span>
+          </div>
+          <div class="screen-img">
+            <!-- Replace contents with: <img src="/static/img/dut_off.png" style="width:100%;height:100%;object-fit:cover;"> -->
+            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
+            <span class="screen-img-placeholder">DUT in path &middot; cold state</span>
+          </div>
+          <div class="screen-foot">Measurement step 1</div>
+        </div>
+
+        <div class="screen-slot">
+          <div class="screen-hdr">
+            <span class="screen-tag-on">ON &middot; src + DUT</span>
+            <span class="screen-var">N<sub>dut,on</sub></span>
+          </div>
+          <div class="screen-img">
+            <!-- Replace contents with: <img src="/static/img/dut_on.png" style="width:100%;height:100%;object-fit:cover;"> -->
+            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
+            <span class="screen-img-placeholder">DUT in path &middot; hot state</span>
+          </div>
+          <div class="screen-foot">Measurement step 2</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Ad slot: replace comment with your Google AdSense script tag when approved -->
+  <div class="ad-slot">
+    <!-- Google AdSense ad unit goes here -->
+    Ad space
+  </div>
+
+  <script>
+    async function calculate() {
+      const btn = document.getElementById('calc-btn');
+      const err = document.getElementById('err');
+      const box = document.getElementById('result-box');
+
+      const fields = ['ns_off', 'ns_on', 'dut_off', 'dut_on', 'enr'];
+      const payload = {};
+      for (const f of fields) {
+        const val = document.getElementById(f).value.trim();
+        if (val === '') {
+          err.textContent = 'All five fields are required.';
+          err.style.display = 'block';
+          box.style.display = 'none';
+          return;
+        }
+        payload[f] = parseFloat(val);
+      }
+
+      err.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Calculating...';
+
+      try {
+        const res = await fetch('/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          err.textContent = data.error || 'Calculation failed.';
+          err.style.display = 'block';
+          box.style.display = 'none';
+        } else {
+          document.getElementById('result-val').textContent = data.noise_figure_db.toFixed(2);
+          box.style.display = 'block';
+        }
+      } catch (e) {
+        err.textContent = 'Network error — is the server running?';
+        err.style.display = 'block';
+        box.style.display = 'none';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Calculate noise figure';
+      }
+    }
+  </script>
+
+</body>
+</html>
