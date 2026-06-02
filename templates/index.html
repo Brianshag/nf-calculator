@@ -46,12 +46,6 @@
       font-weight: 500;
       letter-spacing: -0.01em;
     }
-    .page-sub {
-      font-size: 11px;
-      color: var(--text3);
-      margin-top: 4px;
-      letter-spacing: 0.03em;
-    }
 
     .two-col {
       max-width: 1400px;
@@ -281,10 +275,10 @@
     }
     .ref-btn:hover { background: var(--blue-dk); }
 
-    .screen-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
+    .screen-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     .screen-slot {
       background: var(--surface);
@@ -293,15 +287,21 @@
       overflow: hidden;
     }
     .screen-hdr {
-      padding: 6px 8px;
+      padding: 7px 10px;
       border-bottom: 0.5px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .screen-tag-off { font-size: 10px; font-weight: 500; color: var(--text2); }
-    .screen-tag-on  { font-size: 10px; font-weight: 500; color: var(--green-dk); }
-    .screen-var     { font-size: 10px; color: var(--text3); }
+    .screen-hdr-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .screen-hdr-sub {
+      font-size: 10px;
+      color: var(--text3);
+    }
     .screen-img {
       width: 100%;
       min-height: 280px;
@@ -310,12 +310,47 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      /* Replace background with: background-image: url('/static/img/YOUR_SCREENSHOT.png');
-         background-size: cover; background-position: center; */
+      gap: 8px;
+      /* To add your screenshot replace the contents with:
+         <img src="/static/img/calibration.png" style="width:100%;height:100%;object-fit:cover;"> */
     }
-    .screen-img-placeholder { font-size: 10px; color: var(--text3); text-align: center; line-height: 1.5; }
-    .screen-foot { font-size: 10px; color: var(--text3); padding: 5px 8px; border-top: 0.5px solid var(--border); }
+    .screen-caption {
+      padding: 10px 12px;
+      border-top: 0.5px solid var(--border);
+      background: var(--surface);
+    }
+    .screen-caption-row {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 5px;
+    }
+    .screen-caption-row:last-child { margin-bottom: 0; }
+    .marker-tag {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 1px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .marker-1 { background: var(--surface2); color: var(--text2); border: 0.5px solid var(--border2); }
+    .marker-2 { background: var(--green-bg); color: var(--green-dk); border: 0.5px solid var(--green-br); }
+    .caption-text { font-size: 10px; color: var(--text2); line-height: 1.5; }
+    .sweep-note {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 0.5px solid var(--border);
+      font-size: 10px;
+      color: var(--text3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sweep-note::before {
+      content: '⏱';
+      font-size: 11px;
+    }
 
     /* Ad slot */
     .ad-slot {
@@ -336,7 +371,6 @@
 
     @media (max-width: 700px) {
       .two-col { grid-template-columns: 1fr; }
-      .screen-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -359,7 +393,7 @@
       <div class="slabel slabel-green">Calibration &mdash; noise source only</div>
       <div class="group">
         <div class="field">
-          <div class="field-label">Noise source OFF <span>N<sub>src,off</sub></span></div>
+          <div class="field-label">Noise Source OFF <span>N<sub>src,off</sub></span></div>
           <div><span class="state-tag tag-off">OFF</span></div>
           <div class="input-row">
             <input type="number" id="ns_off" step="0.1" placeholder="-110.0">
@@ -367,7 +401,7 @@
           </div>
         </div>
         <div class="field">
-          <div class="field-label">Noise source ON <span>N<sub>src,on</sub></span></div>
+          <div class="field-label">Noise Source ON <span>N<sub>src,on</sub></span></div>
           <div><span class="state-tag tag-on">ON</span></div>
           <div class="input-row">
             <input type="number" id="ns_on" step="0.1" placeholder="-95.0">
@@ -379,7 +413,7 @@
       <div class="slabel slabel-green">Measurement &mdash; noise source + DUT</div>
       <div class="group">
         <div class="field">
-          <div class="field-label">Noise source OFF <span>N<sub>dut,off</sub></span></div>
+          <div class="field-label">Noise Source OFF <span>N<sub>dut,off</sub></span></div>
           <div><span class="state-tag tag-off">OFF</span></div>
           <div class="input-row">
             <input type="number" id="dut_off" step="0.1" placeholder="-90.0">
@@ -387,7 +421,7 @@
           </div>
         </div>
         <div class="field">
-          <div class="field-label">Noise source ON <span>N<sub>dut,on</sub></span></div>
+          <div class="field-label">Noise Source ON <span>N<sub>dut,on</sub></span></div>
           <div><span class="state-tag tag-on">ON</span></div>
           <div class="input-row">
             <input type="number" id="dut_on" step="0.1" placeholder="-75.0">
@@ -396,9 +430,9 @@
         </div>
       </div>
 
-      <div class="slabel slabel-green">Noise source parameters</div>
+      <div class="slabel slabel-green">Noise Source Parameters</div>
       <div class="enr-group">
-        <div class="field-label">Excess noise ratio <span>ENR<sub>dB</sub></span></div>
+        <div class="field-label">Excess Noise Ratio <span>ENR<sub>dB</sub></span></div>
         <div class="input-row" style="margin-top:4px;">
           <input type="number" id="enr" step="0.01" placeholder="15.20">
           <span class="unit-badge">dB &middot; from noise source</span>
@@ -408,7 +442,7 @@
       <div class="err-box" id="err"></div>
 
       <button class="calc-btn" id="calc-btn" onclick="calculate()">
-        Calculate noise figure
+        Calculate Noise Figure
       </button>
 
       <div class="result-box" id="result-box">
@@ -416,7 +450,7 @@
         <div class="result-inner">
           <span class="result-val" id="result-val">—</span>
           <span class="result-unit">dB</span>
-          <span class="result-name">DUT noise figure</span>
+          <span class="result-name">DUT Noise Figure</span>
         </div>
       </div>
     </div>
@@ -425,10 +459,10 @@
     <div class="col">
       <div class="col-header">
         <div class="dot dot-blue"></div>
-        <span class="col-title">Reference &amp; examples</span>
+        <span class="col-title">Reference &amp; Examples</span>
       </div>
 
-      <div class="slabel slabel-blue">Application note</div>
+      <div class="slabel slabel-blue">Application Note</div>
       <div class="ref-card">
         <div style="flex:1;">
           <div class="ref-logo">Rohde <em>&amp;</em> Schwarz</div>
@@ -439,59 +473,57 @@
         </a>
       </div>
 
-      <div class="slabel slabel-blue">Example measurements</div>
-      <div class="screen-grid">
+      <div class="slabel slabel-blue">Example Measurements</div>
+      <div class="screen-stack">
 
+        <!-- Screenshot 1: Calibration -->
         <div class="screen-slot">
           <div class="screen-hdr">
-            <span class="screen-tag-off">OFF &middot; src only</span>
-            <span class="screen-var">N<sub>src,off</sub></span>
+            <span class="screen-hdr-title">Calibration &mdash; Noise Source Only</span>
+            <span class="screen-hdr-sub">No DUT in path</span>
           </div>
           <div class="screen-img">
-            <!-- Replace contents with: <img src="/static/img/ns_off.png" style="width:100%;height:100%;object-fit:cover;"> -->
-            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
-            <span class="screen-img-placeholder">No DUT &middot; cold state</span>
+            <!-- Replace contents with your screenshot:-->
+                 <img src="/static/img/3.4GHz_NoiseSourceOnly.jpg" style="width:100%;height:100%;object-fit:cover;">
+            <svg width="32" height="32" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
+            <span style="font-size:10px;color:var(--text3);">Spectrum analyzer screenshot</span>
           </div>
-          <div class="screen-foot">Calibration step 1</div>
+          <div class="screen-caption">
+            <div class="screen-caption-row">
+              <span class="marker-tag marker-1">Marker 1</span>
+              <span class="caption-text">Noise Source OFF &mdash; average noise power with source in cold state (N<sub>src,off</sub>)</span>
+            </div>
+            <div class="screen-caption-row">
+              <span class="marker-tag marker-2">Marker 2</span>
+              <span class="caption-text">Noise Source ON &mdash; average noise power with source biased (N<sub>src,on</sub>)</span>
+            </div>
+            <div class="sweep-note">10 s sweep time captures both ON and OFF states of the noise source in a single trace</div>
+          </div>
         </div>
 
+        <!-- Screenshot 2: Measurement -->
         <div class="screen-slot">
           <div class="screen-hdr">
-            <span class="screen-tag-on">ON &middot; src only</span>
-            <span class="screen-var">N<sub>src,on</sub></span>
+            <span class="screen-hdr-title">Measurement &mdash; Noise Source + DUT</span>
+            <span class="screen-hdr-sub">DUT in path</span>
           </div>
           <div class="screen-img">
-            <!-- Replace contents with: <img src="/static/img/ns_on.png" style="width:100%;height:100%;object-fit:cover;"> -->
-            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
-            <span class="screen-img-placeholder">No DUT &middot; hot state</span>
+            <!-- Replace contents with your screenshot:-->
+                 <img src="/static/img/3.4GHz_NoiseSource+DUT.jpg" style="width:100%;height:100%;object-fit:cover;"> 
+            <svg width="32" height="32" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
+            <span style="font-size:10px;color:var(--text3);">Spectrum analyzer screenshot</span>
           </div>
-          <div class="screen-foot">Calibration step 2</div>
-        </div>
-
-        <div class="screen-slot">
-          <div class="screen-hdr">
-            <span class="screen-tag-off">OFF &middot; src + DUT</span>
-            <span class="screen-var">N<sub>dut,off</sub></span>
+          <div class="screen-caption">
+            <div class="screen-caption-row">
+              <span class="marker-tag marker-1">Marker 1</span>
+              <span class="caption-text">Noise Source OFF + DUT &mdash; noise floor through DUT, source cold (N<sub>dut,off</sub>)</span>
+            </div>
+            <div class="screen-caption-row">
+              <span class="marker-tag marker-2">Marker 2</span>
+              <span class="caption-text">Noise Source ON + DUT &mdash; amplified noise through DUT, source biased (N<sub>dut,on</sub>)</span>
+            </div>
+            <div class="sweep-note">10 s sweep time captures both ON and OFF states of the noise source in a single trace</div>
           </div>
-          <div class="screen-img">
-            <!-- Replace contents with: <img src="/static/img/dut_off.png" style="width:100%;height:100%;object-fit:cover;"> -->
-            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
-            <span class="screen-img-placeholder">DUT in path &middot; cold state</span>
-          </div>
-          <div class="screen-foot">Measurement step 1</div>
-        </div>
-
-        <div class="screen-slot">
-          <div class="screen-hdr">
-            <span class="screen-tag-on">ON &middot; src + DUT</span>
-            <span class="screen-var">N<sub>dut,on</sub></span>
-          </div>
-          <div class="screen-img">
-            <!-- Replace contents with: <img src="/static/img/dut_on.png" style="width:100%;height:100%;object-fit:cover;"> -->
-            <svg width="28" height="28" fill="none" stroke="#c0c0bc" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="1.5"/></svg>
-            <span class="screen-img-placeholder">DUT in path &middot; hot state</span>
-          </div>
-          <div class="screen-foot">Measurement step 2</div>
         </div>
 
       </div>
@@ -499,10 +531,10 @@
 
   </div>
 
-  <!-- Ad slot: replace comment with your Google AdSense script tag when approved -->
+  <!-- Ad slot: replace with your Google AdSense script tag when approved -->
   <div class="ad-slot">
     <!-- Google AdSense ad unit goes here -->
-    Ad space
+    Ad Space
   </div>
 
   <script>
@@ -550,7 +582,7 @@
         box.style.display = 'none';
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Calculate noise figure';
+        btn.textContent = 'Calculate Noise Figure';
       }
     }
   </script>
