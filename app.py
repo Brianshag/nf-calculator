@@ -8,6 +8,9 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route('/ads.txt')
+def ads_txt():
+    return "google.com, pub-4436507227492177, DIRECT, f08c47fec0942fa0", 200, {'Content-Type': 'text/plain'}
 
 @app.route("/calculate", methods=["POST"])
 def calculate():
