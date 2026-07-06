@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Y-Factor Noise Figure Calculator | RF Tool</title>
+  <meta name="description" content="Free online noise figure calculator using the Y-Factor method with second-stage spectrum analyzer correction. Based on R&S application note 1MA178.">
+  <meta name="keywords" content="noise figure calculator, Y-factor method, RF noise figure, noise figure measurement, spectrum analyzer, ENR, noise source">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436507227492177"
      crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,32 +28,42 @@
       --green-br:  #9FE1CB;
       --blue:      #185FA5;
       --blue-dk:   #0C447C;
+      --blue-bg:   #EBF2FB;
       --red-bg:    #fef2f2;
       --red-br:    #fca5a5;
       --red-text:  #b91c1c;
     }
 
     body {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       padding: 1.5rem 1rem;
     }
 
+    /* ── Page header ── */
     .page-header {
       max-width: 1400px;
-      margin: 0 auto 1.25rem;
+      margin: 0 auto 0.5rem;
     }
     .page-title {
-      font-size: 18px;
-      font-weight: 500;
-      letter-spacing: -0.01em;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .page-intro {
+      font-size: 14px;
+      color: var(--text2);
+      margin-top: 6px;
+      max-width: 700px;
+      line-height: 1.6;
     }
 
+    /* ── Two column calculator ── */
     .two-col {
       max-width: 1400px;
-      margin: 0 auto;
+      margin: 1.25rem auto 0;
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 16px;
@@ -81,11 +93,13 @@
       font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      font-family: 'IBM Plex Mono', monospace;
     }
     .col-sub {
       font-size: 10px;
       color: var(--text3);
       margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
     }
 
     .slabel {
@@ -96,6 +110,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      font-family: 'IBM Plex Mono', monospace;
     }
     .slabel::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
     .slabel-green { color: var(--green-dk); }
@@ -124,6 +139,7 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
+      font-family: 'IBM Plex Mono', monospace;
     }
     .field-label span { font-size: 10px; color: var(--text3); }
 
@@ -135,17 +151,10 @@
       font-weight: 500;
       margin-bottom: 5px;
       display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
     }
-    .tag-off {
-      background: var(--surface2);
-      color: var(--text2);
-      border: 0.5px solid var(--border2);
-    }
-    .tag-on {
-      background: var(--green-bg);
-      color: var(--green-dk);
-      border: 0.5px solid var(--green-br);
-    }
+    .tag-off { background: var(--surface2); color: var(--text2); border: 0.5px solid var(--border2); }
+    .tag-on  { background: var(--green-bg); color: var(--green-dk); border: 0.5px solid var(--green-br); }
 
     .input-row { display: flex; }
     input[type="number"] {
@@ -179,6 +188,7 @@
       align-items: center;
       white-space: nowrap;
       flex-shrink: 0;
+      font-family: 'IBM Plex Mono', monospace;
     }
 
     .calc-btn {
@@ -216,19 +226,9 @@
       align-items: baseline;
       gap: 8px;
     }
-    .result-val {
-      font-size: 40px;
-      font-weight: 500;
-      color: var(--green-dk);
-    }
-    .result-unit { font-size: 14px; color: var(--green); }
-    .result-name {
-      font-size: 10px;
-      color: #3d6b5a;
-      margin-left: 4px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
+    .result-val  { font-size: 40px; font-weight: 500; color: var(--green-dk); font-family: 'IBM Plex Mono', monospace; }
+    .result-unit { font-size: 14px; color: var(--green); font-family: 'IBM Plex Mono', monospace; }
+    .result-name { font-size: 10px; color: #3d6b5a; margin-left: 4px; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'IBM Plex Mono', monospace; }
 
     .err-box {
       display: none;
@@ -240,9 +240,10 @@
       padding: 8px 10px;
       margin-bottom: 8px;
       line-height: 1.5;
+      font-family: 'IBM Plex Mono', monospace;
     }
 
-    /* Right column */
+    /* ── Right column ── */
     .ref-card {
       background: var(--surface);
       border: 0.5px solid var(--border);
@@ -253,115 +254,141 @@
       align-items: center;
       gap: 10px;
     }
-    .ref-logo { font-size: 12px; font-weight: 500; }
+    .ref-logo { font-size: 12px; font-weight: 500; font-family: 'IBM Plex Mono', monospace; }
     .ref-logo em { color: var(--blue); font-style: normal; }
-    .ref-note { font-size: 10px; color: var(--text3); margin-top: 2px; }
+    .ref-note { font-size: 10px; color: var(--text3); margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
     .ref-btn {
-      height: 30px;
-      padding: 0 12px;
-      background: var(--blue);
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
-      transition: background 0.15s;
+      height: 30px; padding: 0 12px; background: var(--blue); border: none; border-radius: 6px;
+      color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; text-decoration: none; display: flex; align-items: center;
+      gap: 5px; flex-shrink: 0; transition: background 0.15s;
     }
     .ref-btn:hover { background: var(--blue-dk); }
 
-    .screen-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .screen-slot {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
+    .screen-stack { display: flex; flex-direction: column; gap: 12px; }
+    .screen-slot { background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; overflow: hidden; }
     .screen-hdr {
-      padding: 7px 10px;
-      border-bottom: 0.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 7px 10px; border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .screen-hdr-title {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text);
-    }
-    .screen-hdr-sub {
-      font-size: 10px;
-      color: var(--text3);
-    }
+    .screen-hdr-title { font-size: 11px; font-weight: 500; color: var(--text); font-family: 'IBM Plex Mono', monospace; }
+    .screen-hdr-sub   { font-size: 10px; color: var(--text3); font-family: 'IBM Plex Mono', monospace; }
     .screen-img {
-      width: 100%;
-      min-height: 280px;
-      background: var(--surface2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      /* To add your screenshot replace the contents with:
-         <img src="/static/img/calibration.png" style="width:100%;height:100%;object-fit:cover;"> */
+      width: 100%; min-height: 280px; background: var(--surface2);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
     }
-    .screen-caption {
-      padding: 10px 12px;
-      border-top: 0.5px solid var(--border);
-      background: var(--surface);
-    }
-    .screen-caption-row {
-      display: flex;
-      gap: 8px;
-      align-items: baseline;
-      margin-bottom: 5px;
-    }
+    .screen-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .screen-caption { padding: 10px 12px; border-top: 0.5px solid var(--border); background: var(--surface); }
+    .screen-caption-row { display: flex; gap: 8px; align-items: baseline; margin-bottom: 5px; }
     .screen-caption-row:last-child { margin-bottom: 0; }
-    .marker-tag {
-      font-size: 10px;
-      font-weight: 500;
-      padding: 1px 6px;
-      border-radius: 3px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    .marker-tag { font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; }
     .marker-1 { background: var(--surface2); color: var(--text2); border: 0.5px solid var(--border2); }
     .marker-2 { background: var(--green-bg); color: var(--green-dk); border: 0.5px solid var(--green-br); }
-    .caption-text { font-size: 10px; color: var(--text2); line-height: 1.5; }
+    .caption-text { font-size: 10px; color: var(--text2); line-height: 1.5; font-family: 'IBM Plex Mono', monospace; }
     .sweep-note {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 0.5px solid var(--border);
-      font-size: 10px;
+      margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border);
+      font-size: 10px; color: var(--text3); display: flex; align-items: center; gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .sweep-note::before { content: '⏱'; font-size: 11px; }
+
+    /* ── Content sections ── */
+    .content-sections {
+      max-width: 1400px;
+      margin: 2.5rem auto 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .content-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .content-card.full-width {
+      grid-column: 1 / -1;
+    }
+    .content-card h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.875rem;
+      letter-spacing: -0.01em;
+    }
+    .content-card p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+    .content-card p:last-child { margin-bottom: 0; }
+    .content-card ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .content-card ul li {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.75;
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 4px;
+    }
+    .content-card ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
       color: var(--text3);
+    }
+    .step-list { counter-reset: steps; list-style: none; padding: 0; margin: 0; }
+    .step-list li {
+      counter-increment: steps;
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.75;
+      padding-left: 2rem;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .step-list li::before {
+      content: counter(steps);
+      position: absolute;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background: var(--green-bg);
+      color: var(--green-dk);
+      border: 0.5px solid var(--green-br);
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      top: 2px;
     }
-    .sweep-note::before {
-      content: '⏱';
-      font-size: 11px;
+    .info-row {
+      display: flex;
+      gap: 10px;
+      background: var(--blue-bg);
+      border: 0.5px solid #c0d8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 0.875rem;
     }
+    .info-row-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .info-row-text { font-size: 12px; color: var(--blue-dk); line-height: 1.6; }
 
-    /* Ad slot */
+    /* ── Ad slot ── */
     .ad-slot {
       max-width: 1400px;
       margin: 1.5rem auto 0;
       background: var(--surface);
       border: 0.5px dashed var(--border2);
       border-radius: 8px;
-      height: 90px;
+      min-height: 90px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -369,19 +396,44 @@
       color: var(--text3);
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      font-family: 'IBM Plex Mono', monospace;
     }
+
+    /* ── Footer ── */
+    .footer {
+      max-width: 1400px;
+      margin: 2rem auto 0;
+      padding-top: 1.25rem;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .footer-text { font-size: 11px; color: var(--text3); }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { font-size: 11px; color: var(--text3); text-decoration: none; }
+    .footer-links a:hover { color: var(--text2); }
 
     @media (max-width: 700px) {
       .two-col { grid-template-columns: 1fr; }
+      .content-sections { grid-template-columns: 1fr; }
+      .content-card.full-width { grid-column: 1; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Page header -->
   <div class="page-header">
-    <div class="page-title">Y-Factor Noise Figure Calculator</div>
+    <h1 class="page-title">Y-Factor Noise Figure Calculator</h1>
+    <p class="page-intro">
+      A free, browser-based tool for measuring the noise figure of RF amplifiers, LNAs, and other two-port devices using the Y-Factor method with a spectrum analyzer and calibrated noise source. Includes automatic second-stage correction per the Friis cascade equation.
+    </p>
   </div>
 
+  <!-- Calculator -->
   <div class="two-col">
 
     <!-- LEFT COLUMN: Inputs -->
@@ -478,15 +530,13 @@
       <div class="slabel slabel-blue">Example Measurements</div>
       <div class="screen-stack">
 
-        <!-- Screenshot 1: Calibration -->
         <div class="screen-slot">
           <div class="screen-hdr">
             <span class="screen-hdr-title">Calibration &mdash; Noise Source Only</span>
             <span class="screen-hdr-sub">No DUT in path</span>
           </div>
           <div class="screen-img">
-            <!-- Replace contents with your screenshot:-->
-                 <img src="/static/img/3.4GHz_NoiseSourceOnly.jpg" style="width:100%;height:100%;object-fit:cover;">
+            <img src="/static/img/3.4GHz_NoiseSourceOnly.jpg" alt="Spectrum analyzer screenshot showing noise source only measurement with two markers indicating OFF and ON states">
           </div>
           <div class="screen-caption">
             <div class="screen-caption-row">
@@ -501,15 +551,13 @@
           </div>
         </div>
 
-        <!-- Screenshot 2: Measurement -->
         <div class="screen-slot">
           <div class="screen-hdr">
             <span class="screen-hdr-title">Measurement &mdash; Noise Source + DUT</span>
             <span class="screen-hdr-sub">DUT in path</span>
           </div>
           <div class="screen-img">
-            <!-- Replace contents with your screenshot:-->
-                 <img src="/static/img/3.4GHz_NoiseSource+DUT.jpg" style="width:100%;height:100%;object-fit:cover;"> 
+            <img src="/static/img/3.4GHz_NoiseSource+DUT.jpg" alt="Spectrum analyzer screenshot showing noise source and DUT measurement with two markers indicating OFF and ON states">
           </div>
           <div class="screen-caption">
             <div class="screen-caption-row">
@@ -529,11 +577,71 @@
 
   </div>
 
-  <!-- Ad slot: replace with your Google AdSense script tag when approved -->
+  <!-- Ad slot -->
   <div class="ad-slot">
-    <!-- Google AdSense ad unit goes here -->
     Ad Space
   </div>
+
+  <!-- Content sections -->
+  <div class="content-sections">
+
+    <div class="content-card full-width">
+      <h2>What Is Noise Figure?</h2>
+      <p>
+        Noise figure (NF) is a measure of how much a device — such as an amplifier, mixer, or LNA — degrades the signal-to-noise ratio (SNR) of a signal passing through it. It is expressed in decibels (dB), where 0 dB represents a theoretically perfect, noiseless device. In practice, all real RF components add some amount of thermal noise, and the noise figure quantifies this degradation.
+      </p>
+      <p>
+        A low noise figure is critical in receiver front-end design, satellite communications, radio astronomy, cellular base stations, and any application where weak signals must be detected reliably. For example, a low-noise amplifier (LNA) with a noise figure of 1.5 dB will produce a much cleaner output than one rated at 4 dB, directly improving system sensitivity and range.
+      </p>
+    </div>
+
+    <div class="content-card">
+      <h2>How the Y-Factor Method Works</h2>
+      <p>
+        The Y-Factor method is the most widely used technique for measuring noise figure with a spectrum analyzer. It works by comparing the output noise power of a device under two conditions: with a calibrated noise source switched OFF (cold state) and switched ON (hot state).
+      </p>
+      <p>
+        The ratio of these two power levels is called the Y-factor. Combined with the known Excess Noise Ratio (ENR) of the noise source, the Y-factor allows the noise figure to be calculated directly. This calculator implements the full procedure described in the Rohde &amp; Schwarz application note 1MA178, including a second-stage correction that removes the spectrum analyzer's own noise contribution from the result using the Friis cascade equation.
+      </p>
+      <div class="info-row">
+        <span class="info-row-icon">ℹ</span>
+        <span class="info-row-text">The second-stage correction is performed automatically using the calibration measurements (noise source only, no DUT). No additional input is required from the user.</span>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h2>What You Need</h2>
+      <ul>
+        <li>A spectrum analyzer with a marker function and averaging or max-hold capability</li>
+        <li>A calibrated noise source with a known ENR value (from its calibration sheet)</li>
+        <li>The device under test (DUT) — typically an amplifier or LNA</li>
+        <li>RF coaxial cables and adapters appropriate for your frequency range</li>
+        <li>A DC bias supply for the noise source (usually +28 V)</li>
+      </ul>
+    </div>
+
+    <div class="content-card full-width">
+      <h2>Step-by-Step Measurement Procedure</h2>
+      <ol class="step-list">
+        <li>Connect the noise source directly to the spectrum analyzer input (no DUT). Set the sweep time to 10 seconds to capture both the ON and OFF states of the noise source in a single trace.</li>
+        <li>Toggle the noise source OFF and place Marker 1 on the average noise floor. Record this value as N<sub>src,off</sub> in dBm.</li>
+        <li>Toggle the noise source ON and place Marker 2 on the elevated noise floor. Record this value as N<sub>src,on</sub> in dBm. These two readings form the calibration measurement.</li>
+        <li>Insert the DUT between the noise source and the spectrum analyzer input. Keep all other settings identical.</li>
+        <li>Toggle the noise source OFF and record the new noise floor as N<sub>dut,off</sub> in dBm.</li>
+        <li>Toggle the noise source ON and record the elevated noise floor as N<sub>dut,on</sub> in dBm.</li>
+        <li>Enter all four power readings and the ENR value from your noise source calibration sheet into the calculator above and click Calculate.</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-text">&copy; 2026 noisefigurecalculator.com &mdash; All rights reserved</span>
+    <div class="footer-links">
+      <a href="mailto:contact@noisefigurecalculator.com">Contact</a>
+    </div>
+  </footer>
 
   <script>
     async function calculate() {
