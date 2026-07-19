@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Noise Figure Calculator</title>
+  <meta name="description" content="About noisefigurecalculator.com — a free RF engineering tool for measuring noise figure using the Y-Factor method with a spectrum analyzer.">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436507227492177"
+     crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f5f3; --surface: #ffffff; --border: #e2e2de;
+      --text: #1a1a18; --text2: #6b6b67; --text3: #9f9f9b;
+      --green: #1d9e75; --green-dk: #0F6E56; --green-bg: #E1F5EE; --green-br: #9FE1CB;
+      --blue: #185FA5; --blue-dk: #0C447C; --blue-bg: #EBF2FB;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    .nav { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; }
+    .nav a { font-size: 13px; color: var(--blue); text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
+    .nav-sep { font-size: 13px; color: var(--text3); }
+    h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+    .subtitle { font-size: 14px; color: var(--text2); margin-bottom: 2rem; line-height: 1.6; }
+    .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-bottom: 1rem; }
+    h2 { font-size: 15px; font-weight: 600; margin-bottom: 0.75rem; color: var(--text); }
+    p { font-size: 13px; color: var(--text2); line-height: 1.75; margin-bottom: 0.75rem; }
+    p:last-child { margin-bottom: 0; }
+    ul { list-style: none; padding: 0; margin: 0 0 0.75rem; }
+    ul li { font-size: 13px; color: var(--text2); line-height: 1.75; padding-left: 1.25rem; position: relative; margin-bottom: 4px; }
+    ul li::before { content: '—'; position: absolute; left: 0; color: var(--text3); }
+    .cta-card { background: var(--green-bg); border: 0.5px solid var(--green-br); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .cta-card p { color: var(--green-dk); margin: 0; }
+    .cta-btn { height: 38px; padding: 0 18px; background: var(--green); border: none; border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; display: flex; align-items: center; white-space: nowrap; transition: background 0.15s; }
+    .cta-btn:hover { background: var(--green-dk); }
+    a { color: var(--blue); }
+    .footer { margin-top: 2rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .footer-text { font-size: 11px; color: var(--text3); }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { font-size: 11px; color: var(--text3); text-decoration: none; }
+    .footer-links a:hover { color: var(--text2); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <a href="/">&#8592; Back to Calculator</a>
+      <span class="nav-sep">/</span>
+      <span style="font-size:13px;color:var(--text2);">About</span>
+    </nav>
+
+    <h1>About This Tool</h1>
+    <p class="subtitle">A free, open-access noise figure calculator for RF engineers, students, and researchers — built to simplify the Y-Factor measurement process.</p>
+
+    <div class="cta-card">
+      <p>Ready to measure your device's noise figure?</p>
+      <a href="/" class="cta-btn">Open the Calculator &rarr;</a>
+    </div>
+
+    <div class="card">
+      <h2>What This Tool Does</h2>
+      <p>The Y-Factor Noise Figure Calculator is a free web-based tool that computes the noise figure of RF two-port devices — such as low-noise amplifiers (LNAs), mixers, and filters — using the Y-Factor measurement method with a spectrum analyzer and calibrated noise source.</p>
+      <p>The calculator implements the full second-stage corrected measurement procedure described in the Rohde &amp; Schwarz application note 1MA178. This correction removes the noise contribution of the spectrum analyzer itself from the final result using the Friis cascade equation, giving a more accurate noise figure for the device under test.</p>
+    </div>
+
+    <div class="card">
+      <h2>Why We Built It</h2>
+      <p>Noise figure measurement is a routine task in RF engineering labs, but calculating it correctly — especially with second-stage correction — requires careful arithmetic that is easy to get wrong. Most engineers either write their own spreadsheet or rely on dedicated noise figure analyzers that cost tens of thousands of dollars.</p>
+      <p>This tool provides a free, accessible alternative for engineers who already have a spectrum analyzer and noise source, making the Y-Factor calculation fast, reliable, and available from any browser without installing software.</p>
+    </div>
+
+    <div class="card">
+      <h2>Who It Is For</h2>
+      <ul>
+        <li>RF and microwave engineers characterizing amplifiers, LNAs, and receiver front-ends</li>
+        <li>Students learning noise figure measurement techniques in university labs</li>
+        <li>Researchers working in radio astronomy, satellite communications, or wireless systems</li>
+        <li>Technicians performing production or acceptance testing on RF components</li>
+        <li>Hobbyists building low-noise receivers for amateur radio or software-defined radio (SDR)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Methodology and Reference</h2>
+      <p>All calculations are based on the Y-Factor method as described in the Rohde &amp; Schwarz application note <strong>1MA178: The Y-Factor Technique for Noise Figure Measurements</strong>. The noise figure is derived from four spectrum analyzer power readings and the known Excess Noise Ratio (ENR) of the noise source, with automatic second-stage correction applied via the Friis noise cascade formula.</p>
+      <p>The reference temperature used is T₀ = 290 K, consistent with the IEEE standard definition of noise figure.</p>
+      <p><a href="https://scdn.rohde-schwarz.com/ur/pws/dl_downloads/dl_application/application_notes/1ma178/1MA178_5e_NoiseFigure.pdf" target="_blank" rel="noopener">Download the R&S 1MA178 application note &rarr;</a></p>
+    </div>
+
+    <div class="card">
+      <h2>Contact</h2>
+      <p>For questions, feedback, or bug reports, contact us at <a href="mailto:contact@noisefigurecalculator.com">contact@noisefigurecalculator.com</a>.</p>
+    </div>
+
+    <footer class="footer">
+      <span class="footer-text">&copy; 2026 noisefigurecalculator.com</span>
+      <div class="footer-links">
+        <a href="/">Calculator</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="mailto:contact@noisefigurecalculator.com">Contact</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
