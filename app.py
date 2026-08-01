@@ -44,6 +44,21 @@ def calculate():
     except ValueError as e:
         return jsonify({"error": str(e)}), 422
 
+@app.route('/robots.txt')
+def robots_txt():
+    return """User-agent: *
+Allow: /
+
+Sitemap: https://www.noisefigurecalculator.com/sitemap.xml""", 200, {'Content-Type': 'text/plain'}
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/0.1">
+  <url><loc>https://www.noisefigurecalculator.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://www.noisefigurecalculator.com/about</loc><priority>0.8</priority></url>
+  <url><loc>https://www.noisefigurecalculator.com/privacy</loc><priority>0.5</priority></url>
+</urlset>""", 200, {'Content-Type': 'application/xml'}
 
 if __name__ == "__main__":
     app.run(debug=True)
