@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from calculator import calculate_noise_figure
 
 app = Flask(__name__)
@@ -46,10 +46,7 @@ def calculate():
 
 @app.route('/robots.txt')
 def robots_txt():
-    return """User-agent: *
-Allow: /
-
-Sitemap: https://noisefigurecalculator.com/sitemap.xml""", 200, {'Content-Type': 'text/plain'}
+    return send_from_directory(app.static_folder, 'robots.txt')
 
 @app.route('/sitemap.xml')
 def sitemap():
