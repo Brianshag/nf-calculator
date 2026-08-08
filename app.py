@@ -1,9 +1,13 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, redirect
 from calculator import calculate_noise_figure
 
 app = Flask(__name__)
 
-
+@app.before_request
+def redirect_www():
+    if request.host.startswith('www.'):
+        return redirect(request.url.replace('www.', '', 1), code=301)
+        
 @app.route("/")
 def index():
     return render_template("index.html")
