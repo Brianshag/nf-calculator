@@ -4,9 +4,11 @@ from calculator import calculate_noise_figure
 app = Flask(__name__)
 
 @app.before_request
-def redirect_www():
+def redirect_www_and_https():
     if request.host.startswith('www.'):
-        return redirect(request.url.replace('www.', '', 1), code=301)
+        return redirect(request.url.replace('www.', '', 1).replace('http://', 'https://', 1), code=301)
+    if request.url.startswith('http://'):
+        return redirect(request.url.replace('http://', 'https://', 1), code=301)
         
 @app.route("/")
 def index():
