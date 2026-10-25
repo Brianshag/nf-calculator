@@ -6,7 +6,7 @@
   <title>Y-Factor Noise Figure Calculator — Spectrum Analyzer Method | RF Tool</title>
   <meta name="description" content="Free Y-Factor noise figure calculator for spectrum analyzer measurements. Enter your four power readings and ENR to instantly compute DUT noise figure with automatic second-stage correction. Based on R&S 1MA178.">
   <meta name="keywords" content="Y-factor noise figure calculator, noise figure measurement spectrum analyzer, Y-factor method noise figure, ENR noise source calculator, RF noise figure calculator, LNA noise figure, noise figure spectrum analyzer, Y-factor method, noise figure measurement, RF noise measurement tool">
-  <link rel="canonical" href="https://noisefigurecalculator.com/">
+  <link rel="canonical" href="https://www.noisefigurecalculator.com/">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436507227492177"
      crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -633,6 +633,82 @@
         <li>Enter all four power readings and the ENR value from your noise source calibration sheet into the calculator above and click Calculate.</li>
       </ol>
     </div>
+
+    <div class="content-card full-width">
+      <h2>Worked Example: 3.4 GHz Amplifier</h2>
+      <p>
+        These are real readings from a spectrum analyzer (centre frequency 3.4 GHz, zero span, RBW/VBW 3 MHz, 10 s sweep). In each screenshot above, Marker 1 (5 s) reads the noise source OFF and Marker 2 (8 s) reads it ON. The noise source ENR is 15.13 dB.
+      </p>
+      <table class="ex-table">
+        <thead><tr><th>Measurement</th><th>OFF (dBm)</th><th>ON (dBm)</th><th>Y-factor</th></tr></thead>
+        <tbody>
+          <tr><td>Noise source only (screenshot 2)</td><td>&minus;101.91</td><td>&minus;96.94</td><td>4.97 dB</td></tr>
+          <tr><td>Noise source + DUT (screenshot 1)</td><td>&minus;98.42</td><td>&minus;88.06</td><td>10.36 dB</td></tr>
+        </tbody>
+      </table>
+      <ol class="ex-steps">
+        <li><strong>Analyzer noise figure.</strong> The source-only Y-factor of 4.97 dB with a 15.13 dB ENR gives a spectrum analyzer noise figure of about 11.82 dB.</li>
+        <li><strong>Cascaded noise figure.</strong> The DUT + analyzer Y-factor of 10.36 dB gives a combined noise figure of about 5.19 dB.</li>
+        <li><strong>DUT gain.</strong> The gain is the ratio of the ON&minus;OFF power differences with and without the DUT, which is about 10.13 dB.</li>
+        <li><strong>Second-stage correction.</strong> The Friis equation, F<sub>DUT</sub> = F<sub>cascade</sub> &minus; (F<sub>SA</sub> &minus; 1) / G, removes the analyzer's contribution.</li>
+      </ol>
+      <p class="ex-result">DUT noise figure &asymp; <strong>2.84 dB</strong> at 3.4 GHz, with about 10.13 dB of gain.</p>
+      <p>
+        Without the correction you would read 5.19 dB, which overstates the DUT's noise figure by about 2.35 dB. The correction matters most when the DUT gain is low compared to the analyzer's own noise figure.
+      </p>
+    </div>
+
+    <div class="content-card full-width faq">
+      <h2>Frequently Asked Questions</h2>
+
+      <details>
+        <summary>What is ENR and where do I find it?</summary>
+        <p>Excess Noise Ratio (ENR) describes how much more noise power a noise source produces when switched on compared with thermal noise at the reference temperature. It is printed on the noise source and listed in its calibration sheet, usually per frequency, so use the value closest to your measurement frequency.</p>
+        <p class="faq-link">Read more: <a href="https://www.everythingrf.com/community/what-is-excess-noise-ratio-or-enr" target="_blank" rel="noopener">What is Excess Noise Ratio (ENR)? &mdash; everything RF</a></p>
+      </details>
+
+      <details>
+        <summary>Why is the Y-factor method used, and why must Y be greater than 1?</summary>
+        <p>The Y-factor is the ratio of noise power with the source ON to noise power with it OFF. Switching a noise source on can only add noise, so a valid measurement always gives Y &gt; 1. If it doesn't, the noise source is not reaching the analyzer, or the DUT or analyzer noise is swamping the source.</p>
+        <p class="faq-link">Read more: <a href="https://www.keysight.com/find/AN57-2" target="_blank" rel="noopener">Noise Figure Measurement Accuracy: The Y-Factor Method &mdash; Keysight</a></p>
+      </details>
+
+      <details>
+        <summary>How do I measure noise figure with a spectrum analyzer?</summary>
+        <p>Connect a noise source, measure the analyzer's noise with the source ON and OFF, repeat with the DUT in place, then enter the four readings and the ENR. This calculator then applies the corrections for you.</p>
+        <p class="faq-link">Read more: <a href="https://www.rohde-schwarz.com/us/_258367.html" target="_blank" rel="noopener">Understanding noise figure &mdash; Rohde &amp; Schwarz</a> &middot; <a href="https://www.rohde-schwarz.com/ae/_56280-15484.html" target="_blank" rel="noopener">The Y-Factor Technique for Noise Figure Measurements (1MA178)</a></p>
+      </details>
+
+      <details>
+        <summary>Why does the spectrum analyzer need a second-stage correction?</summary>
+        <p>A spectrum analyzer has a noise figure of its own, often 10 dB or more. When it follows the DUT, it adds noise to the measurement. The Friis cascade formula lets you subtract that contribution, divided by the DUT gain, so the result reflects the DUT alone.</p>
+        <p class="faq-link">Read more: <a href="https://en.wikipedia.org/wiki/Noise_figure" target="_blank" rel="noopener">Noise figure (including cascaded stages) &mdash; Wikipedia</a></p>
+      </details>
+
+      <details>
+        <summary>Why is 290 K used as the reference temperature?</summary>
+        <p>The IEEE standard defines noise factor relative to a source at T<sub>0</sub> = 290 K, so noise figures from different vendors and labs can be compared directly.</p>
+        <p class="faq-link">Read more: <a href="https://en.wikipedia.org/wiki/Noise_figure" target="_blank" rel="noopener">Noise figure &mdash; Wikipedia</a></p>
+      </details>
+
+      <details>
+        <summary>What is a good noise figure for an LNA?</summary>
+        <p>It depends on frequency and technology, but around 1 dB is generally considered a good, low noise figure, and about 3 dB is typical for general-purpose LNAs. Satellite and radio astronomy front-ends go well below that.</p>
+        <p class="faq-link">Read more: <a href="https://en.wikipedia.org/wiki/Low-noise_amplifier" target="_blank" rel="noopener">Low-noise amplifier &mdash; Wikipedia</a></p>
+      </details>
+    </div>
+
+    <style>
+      .ex-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1rem; font-size: 13px; }
+      .ex-table th, .ex-table td { text-align: left; padding: 8px 10px; border-bottom: 0.5px solid var(--border); }
+      .ex-table th { font-weight: 600; }
+      .ex-steps { padding-left: 1.25rem; margin: 0 0 1rem; font-size: 13px; line-height: 1.75; }
+      .ex-result { font-size: 15px; }
+      .faq details { border-bottom: 0.5px solid var(--border); padding: 10px 0; }
+      .faq summary { cursor: pointer; font-size: 14px; font-weight: 500; }
+      .faq details p { margin-top: 8px; }
+      .faq-link a { color: var(--blue); }
+    </style>
 
   </div>
 

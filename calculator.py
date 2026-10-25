@@ -61,8 +61,11 @@ def calculate_noise_figure(
     T_cascade = (T_on - Y_dut * T_off) / (Y_dut - 1)
     F_cascade  = T_cascade / T0 + 1
 
-    # DUT gain from cold-state power ratio
-    G_dut    = dut_off / ns_off
+    # DUT gain from the ON-OFF power differences. The difference removes all
+    # thermal/added noise, leaving only the excess noise from the source, which
+    # is amplified by the DUT. (Using dut_off/ns_off would include the DUT's own
+    # added noise and understate the gain.)
+    G_dut    = (dut_on - dut_off) / (ns_on - ns_off)
     G_dut_db = linear_to_db(G_dut)
 
     # DUT noise factor via Friis equation (second-stage corrected)
