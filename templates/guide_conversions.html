@@ -1,0 +1,44 @@
+{% extends "guide_base.html" %}
+{% block body %}
+<p>Datasheets quote noise in different ways: noise figure in dB, noise factor as a plain ratio, and noise temperature in kelvin. They describe the same thing, and switching between them takes two short formulas. This guide gives the formulas, a reference table, and a few rules of thumb.</p>
+
+<h2>The three quantities</h2>
+<ul>
+  <li><strong>Noise factor (F)</strong> is a linear ratio: the input signal-to-noise ratio divided by the output signal-to-noise ratio. A perfect device has F = 1.</li>
+  <li><strong>Noise figure (NF)</strong> is the noise factor in decibels. A perfect device has NF = 0 dB.</li>
+  <li><strong>Noise temperature (T<sub>e</sub>)</strong> is the temperature of a resistor at the input that would produce the same added noise. A perfect device has T<sub>e</sub> = 0 K.</li>
+</ul>
+
+<h2>The formulas</h2>
+<div class="eq">F = 10<sup>NF/10</sup> &nbsp;&nbsp;&nbsp; NF = 10 &middot; log<sub>10</sub>(F)</div>
+<div class="eq">T<sub>e</sub> = T<sub>0</sub> &middot; (F &minus; 1) &nbsp;&nbsp;&nbsp; F = 1 + T<sub>e</sub> / T<sub>0</sub></div>
+<p>T<sub>0</sub> is the standard reference temperature, 290 K. The same T<sub>0</sub> is used by this site's calculator.</p>
+
+<h2>Reference table</h2>
+<table>
+  <thead><tr><th>Noise figure (dB)</th><th>Noise factor</th><th>Noise temperature (K)</th></tr></thead>
+  <tbody>
+    <tr><td>0.5</td><td>1.122</td><td>35.4</td></tr>
+    <tr><td>1.0</td><td>1.259</td><td>75.1</td></tr>
+    <tr><td>1.5</td><td>1.413</td><td>119.6</td></tr>
+    <tr><td>2.0</td><td>1.585</td><td>169.6</td></tr>
+    <tr><td>3.0</td><td>1.995</td><td>288.6</td></tr>
+    <tr><td>5.0</td><td>3.162</td><td>627.1</td></tr>
+    <tr><td>10.0</td><td>10.000</td><td>2610.0</td></tr>
+  </tbody>
+</table>
+
+<h2>Worked examples</h2>
+<ul>
+  <li>The 3.4 GHz amplifier from the <a href="/guides/measure-lna-noise-figure">measurement guide</a> has NF = 2.84 dB. That is F = 10<sup>0.284</sup> &asymp; 1.92, or T<sub>e</sub> = 290 &times; 0.92 &asymp; 267 K.</li>
+  <li>A datasheet that says T<sub>e</sub> = 50 K corresponds to F = 1 + 50/290 &asymp; 1.172, or NF &asymp; 0.69 dB.</li>
+</ul>
+
+<h2>Rules of thumb</h2>
+<ul>
+  <li>Noise temperature is the better scale when comparing very low-noise devices. Going from NF 0.5 dB to 0.4 dB looks tiny, but it is a drop of about 7 K.</li>
+  <li>A device with NF = 3 dB has a noise temperature roughly equal to the 290 K reference. Each time you add 3 dB, the noise factor roughly doubles.</li>
+  <li>Never average noise figures in dB without thinking. To combine stages, convert to linear noise factors and use the cascade formula, as in the <a href="/guides/second-stage-correction">second-stage correction guide</a>.</li>
+</ul>
+<p>To measure a real device, use the <a href="/">Y-factor calculator</a>.</p>
+{% endblock %}

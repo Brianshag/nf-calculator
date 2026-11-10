@@ -1,0 +1,8 @@
+{% extends "guide_base.html" %}
+{% block body %}
+<p>Practical notes on measuring noise figure with a spectrum analyzer and a noise source, written from real bench work. Each guide stands on its own, and all of them use the same 3.4 GHz example measurement.</p>
+{% for g in guides %}
+<h2><a href="{{ g.path }}">{{ g.title }}</a></h2>
+<p>{{ g.summary }}</p>
+{% endfor %}
+{% endblock %}

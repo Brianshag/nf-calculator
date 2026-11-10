@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} | Noise Figure Calculator</title>
+  <meta name="description" content="{{ description }}">
+  <link rel="canonical" href="https://noisefigurecalculator.com{{ path }}">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436507227492177"
+     crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f5f3; --surface: #ffffff; --border: #e2e2de;
+      --text: #1a1a18; --text2: #4a4a47; --text3: #9f9f9b;
+      --green: #1d9e75; --green-dk: #0F6E56; --green-bg: #E1F5EE; --green-br: #9FE1CB;
+      --blue: #185FA5; --blue-bg: #EBF2FB;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    .nav { display: flex; align-items: center; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+    .nav a { font-size: 13px; color: var(--blue); text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
+    .nav-sep { font-size: 13px; color: var(--text3); }
+    h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.5rem; line-height: 1.25; }
+    .byline { font-size: 12px; color: var(--text3); margin-bottom: 1.5rem; }
+    .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-bottom: 1rem; }
+    h2 { font-size: 17px; font-weight: 600; margin: 1.5rem 0 0.6rem; }
+    .card h2:first-child { margin-top: 0; }
+    p { font-size: 14px; color: var(--text2); line-height: 1.8; margin-bottom: 0.85rem; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { margin: 0 0 0.85rem 1.25rem; }
+    li { font-size: 14px; color: var(--text2); line-height: 1.8; margin-bottom: 4px; }
+    table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1rem; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 0.5px solid var(--border); color: var(--text2); }
+    th { font-weight: 600; color: var(--text); }
+    .eq { background: var(--blue-bg); border-radius: 8px; padding: 12px 16px; font-size: 14px; margin: 0.5rem 0 1rem; overflow-x: auto; color: var(--text); }
+    .callout { background: var(--green-bg); border: 0.5px solid var(--green-br); border-radius: 10px; padding: 12px 16px; margin: 0.5rem 0 1rem; }
+    .callout p { color: var(--green-dk); margin: 0; }
+    figure { margin: 0.75rem 0 1rem; }
+    figure img { width: 100%; border: 0.5px solid var(--border); border-radius: 8px; display: block; }
+    figcaption { font-size: 12px; color: var(--text3); margin-top: 6px; line-height: 1.6; }
+    a { color: var(--blue); }
+    .cta { display: inline-block; margin-top: 0.5rem; padding: 10px 18px; background: var(--green); color: #fff; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 500; }
+    .cta:hover { background: var(--green-dk); }
+    .related li { margin-bottom: 6px; }
+    .footer { margin-top: 2rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .footer-text { font-size: 11px; color: var(--text3); }
+    .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .footer-links a { font-size: 11px; color: var(--text3); text-decoration: none; }
+    .footer-links a:hover { color: var(--text2); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <a href="/">&#8592; Calculator</a>
+      <span class="nav-sep">/</span>
+      <a href="/guides">Guides</a>
+      <span class="nav-sep">/</span>
+      <span style="font-size:13px;color:var(--text2);">{{ title }}</span>
+    </nav>
+
+    <h1>{{ title }}</h1>
+    <p class="byline">By the author of noisefigurecalculator.com &middot; RF hardware engineer &middot; Updated November 2026</p>
+
+    <div class="card">
+      {% block body %}{% endblock %}
+    </div>
+
+    <div class="card related">
+      <h2>More guides</h2>
+      <ul>
+        {% for g in guides %}{% if g.path != path %}
+        <li><a href="{{ g.path }}">{{ g.title }}</a></li>
+        {% endif %}{% endfor %}
+      </ul>
+      <a class="cta" href="/">Open the noise figure calculator &rarr;</a>
+    </div>
+
+    <footer class="footer">
+      <span class="footer-text">&copy; 2026 noisefigurecalculator.com</span>
+      <div class="footer-links">
+        <a href="/">Calculator</a>
+        <a href="/guides">Guides</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="mailto:contact@noisefigurecalculator.com">Contact</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

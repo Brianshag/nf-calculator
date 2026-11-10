@@ -1,0 +1,58 @@
+{% extends "guide_base.html" %}
+{% block body %}
+<p>You don't need a dedicated noise figure analyzer to characterize an LNA. A spectrum analyzer and a calibrated noise source are enough for a measurement good to a few tenths of a dB, as long as the setup is clean and you correct for the analyzer's own noise. This guide walks through a real measurement of an amplifier at 3.4 GHz, from instrument settings to the final number.</p>
+
+<h2>What you need</h2>
+<ul>
+  <li>A spectrum analyzer with markers and a zero-span mode</li>
+  <li>A noise source with a calibrated ENR (here: 15.13 dB at 3.4 GHz) and its DC supply, switched on and off with a pulse or switch</li>
+  <li>The device under test (DUT), here an amplifier with roughly 10 dB of gain</li>
+  <li>Good coaxial cables and adapters, kept as short as practical</li>
+</ul>
+
+<h2>Step 1: Set up the analyzer</h2>
+<p>The trick that makes this measurement fast is capturing both noise source states in a single sweep. Put the analyzer in <strong>zero span</strong> at your measurement frequency, set the sweep time to <strong>10 seconds</strong>, and toggle the noise source part way through the sweep. In this example the source is OFF at the 5 s marker and ON at the 8 s marker. Settings used here:</p>
+<table>
+  <tbody>
+    <tr><td>Centre frequency</td><td>3.4 GHz</td></tr>
+    <tr><td>Span</td><td>0 Hz (zero span)</td></tr>
+    <tr><td>RBW / VBW</td><td>3 MHz / 3 MHz</td></tr>
+    <tr><td>Sweep time</td><td>10 s</td></tr>
+    <tr><td>Scale / reference level</td><td>2 dB/div, &minus;85 dBm</td></tr>
+  </tbody>
+</table>
+<p>A wide RBW gives a steadier reading of noise, but only if the DUT response is flat across that bandwidth. Use an average or RMS detector, not peak detection, which reads noise several dB high.</p>
+
+<h2>Step 2: Calibration (noise source only)</h2>
+<p>Connect the noise source straight to the analyzer, with no DUT. Run the sweep and place one marker on the OFF segment and one on the ON segment.</p>
+<figure>
+  <img src="/static/img/3.4GHz_NoiseSourceOnly.jpg" alt="Spectrum analyzer trace of the noise source only, showing the OFF and ON levels" loading="lazy">
+  <figcaption>Noise source only. Marker 1 (5 s, source OFF) reads &minus;101.91 dBm and Marker 2 (8 s, source ON) reads &minus;96.94 dBm.</figcaption>
+</figure>
+<p>The difference is 4.97 dB, the Y-factor of the analyzer alone. Because the analyzer is a fairly noisy receiver, a 15 dB ENR source only raises its noise floor by about 5 dB, which tells you the analyzer's noise figure is high. That is expected and is exactly what the correction in step 4 removes.</p>
+
+<h2>Step 3: Measure with the DUT</h2>
+<p>Insert the DUT between the noise source and the analyzer without changing any analyzer setting. Repeat the sweep with the same marker times.</p>
+<figure>
+  <img src="/static/img/3.4GHz_NoiseSource+DUT.jpg" alt="Spectrum analyzer trace of noise source plus DUT, showing the OFF and ON levels" loading="lazy">
+  <figcaption>Noise source plus DUT. Source OFF reads &minus;98.42 dBm and source ON reads &minus;88.06 dBm.</figcaption>
+</figure>
+<p>The Y-factor is now 10.36 dB, much larger than before because the DUT amplifies the excess noise above the analyzer's own floor. A bigger Y-factor means a more reliable result.</p>
+
+<h2>Step 4: Calculate</h2>
+<table>
+  <thead><tr><th>Measurement</th><th>OFF (dBm)</th><th>ON (dBm)</th><th>Y-factor</th></tr></thead>
+  <tbody>
+    <tr><td>Source only</td><td>&minus;101.91</td><td>&minus;96.94</td><td>4.97 dB</td></tr>
+    <tr><td>Source + DUT</td><td>&minus;98.42</td><td>&minus;88.06</td><td>10.36 dB</td></tr>
+  </tbody>
+</table>
+<ol>
+  <li>With ENR = 15.13 dB, the source-only Y-factor gives an analyzer noise figure of about 11.82 dB.</li>
+  <li>The DUT + analyzer Y-factor gives a combined (cascaded) noise figure of about 5.19 dB.</li>
+  <li>The DUT gain, from the difference between ON and OFF powers with and without the DUT, is about 10.13 dB.</li>
+  <li>Removing the analyzer's contribution with the Friis equation leaves a DUT noise figure of about <strong>2.84 dB</strong>.</li>
+</ol>
+<div class="callout"><p>Result: the amplifier has a noise figure of about 2.84 dB and a gain of about 10.1 dB at 3.4 GHz. Skipping the correction would have reported 5.19 dB.</p></div>
+<p>You can reproduce every number above by typing the four readings and the ENR into the <a href="/">calculator</a>. See <a href="/guides/second-stage-correction">why the second-stage correction matters</a> for the derivation, and <a href="/guides/y-factor-mistakes">common Y-factor mistakes</a> before you trust a number you will publish.</p>
+{% endblock %}

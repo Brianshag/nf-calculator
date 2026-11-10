@@ -1,0 +1,40 @@
+{% extends "guide_base.html" %}
+{% block body %}
+<p>A spectrum analyzer is not a perfect receiver. Its own noise figure is commonly 10 dB or more, and that noise gets added on top of whatever the DUT produces. If you ignore it, you measure the combination of your DUT and your instrument, not the DUT. The fix is a second-stage correction based on the Friis noise formula, and it is worth understanding because it decides whether your result is believable.</p>
+
+<h2>The cascade picture</h2>
+<p>When your DUT feeds the analyzer, the pair behaves as two stages in cascade. The Friis formula for noise factor (linear, not dB) says:</p>
+<div class="eq">F<sub>cascade</sub> = F<sub>DUT</sub> + (F<sub>SA</sub> &minus; 1) / G<sub>DUT</sub></div>
+<p>The analyzer's excess noise (F<sub>SA</sub> &minus; 1) is divided by the DUT gain, so a high-gain DUT hides the analyzer's noise and a low-gain DUT exposes it. Rearranged to solve for what you actually want:</p>
+<div class="eq">F<sub>DUT</sub> = F<sub>cascade</sub> &minus; (F<sub>SA</sub> &minus; 1) / G<sub>DUT</sub></div>
+
+<h2>Where each term comes from</h2>
+<ul>
+  <li><strong>F<sub>SA</sub></strong> comes from the source-only measurement. Its Y-factor and the source's ENR give the analyzer's noise temperature and so its noise factor.</li>
+  <li><strong>F<sub>cascade</sub></strong> comes from the measurement with the DUT in place, using the same Y-factor calculation.</li>
+  <li><strong>G<sub>DUT</sub></strong> is the DUT gain. Use the ratio of the ON&minus;OFF power differences (DUT path over source-only path). Do not use the ratio of the OFF powers: that mixes in the DUT's added noise and understates the gain.</li>
+</ul>
+
+<h2>How big is the correction?</h2>
+<p>Assume a DUT with a true noise figure of 2 dB measured on an analyzer with a 12 dB noise figure. The measured (uncorrected) cascade value, as a function of DUT gain, is:</p>
+<table>
+  <thead><tr><th>DUT gain</th><th>Uncorrected NF</th><th>Error vs true 2 dB</th></tr></thead>
+  <tbody>
+    <tr><td>0 dB</td><td>12.16 dB</td><td>+10.16 dB</td></tr>
+    <tr><td>3 dB</td><td>9.56 dB</td><td>+7.56 dB</td></tr>
+    <tr><td>6 dB</td><td>7.25 dB</td><td>+5.25 dB</td></tr>
+    <tr><td>10 dB</td><td>4.87 dB</td><td>+2.87 dB</td></tr>
+    <tr><td>15 dB</td><td>3.13 dB</td><td>+1.13 dB</td></tr>
+    <tr><td>20 dB</td><td>2.39 dB</td><td>+0.39 dB</td></tr>
+    <tr><td>30 dB</td><td>2.04 dB</td><td>+0.04 dB</td></tr>
+  </tbody>
+</table>
+<p>Two lessons. First, with 20 dB or more of DUT gain the analyzer hardly matters and you can often skip the correction. Second, with 10 dB or less it matters a lot, and the correction itself becomes sensitive to small measurement errors, because you are subtracting two large numbers to get a small one.</p>
+
+<h2>A real example</h2>
+<p>In the <a href="/guides/measure-lna-noise-figure">3.4 GHz measurement</a>, the analyzer's noise figure was 11.82 dB and the cascade measured 5.19 dB. With 10.13 dB of DUT gain the correction removes about 2.35 dB, leaving 2.84 dB for the DUT. Without correction the amplifier's noise factor would have looked about 72% higher than it really is (3.30 versus 1.92).</p>
+
+<h2>When the correction fails</h2>
+<p>If a noisy analyzer sits behind a low-gain DUT, small errors in the readings can produce a corrected result below 0 dB, which is physically impossible. The calculator reports this as an error. It usually means the gain was mis-measured, the readings drifted between sweeps, or the DUT gain is too low for this method to give a reliable answer. The remedies are to add a low-noise preamplifier ahead of the analyzer, use a DUT with more gain, or average the readings more heavily.</p>
+<p>See also <a href="/guides/y-factor-mistakes">common Y-factor measurement mistakes</a>, and try the numbers in the <a href="/">calculator</a>.</p>
+{% endblock %}

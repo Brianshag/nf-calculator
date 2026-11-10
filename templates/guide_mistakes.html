@@ -1,0 +1,37 @@
+{% extends "guide_base.html" %}
+{% block body %}
+<p>The Y-factor method is simple on paper and surprisingly easy to get wrong on the bench. Most bad results come from a short list of causes. Check these before you trust, or publish, a noise figure.</p>
+
+<h2>1. Using the wrong ENR</h2>
+<p>A noise source's ENR varies with frequency, and the calibration sheet lists it at specific points. Use the value at your measurement frequency, interpolating if needed, not the headline number on the label. An ENR error of 0.3 dB feeds straight into your result.</p>
+
+<h2>2. Skipping the second-stage correction</h2>
+<p>If the DUT has modest gain, the analyzer's own noise inflates the answer. With 10 dB of DUT gain and a typical analyzer, the error can be nearly 3 dB. See <a href="/guides/second-stage-correction">why the correction matters</a>.</p>
+
+<h2>3. Computing gain from the wrong readings</h2>
+<p>Gain must come from the change in power when the noise source switches state, not from the OFF-state noise floor with and without the DUT. The OFF floor includes the DUT's own noise, so it understates gain and makes the corrected result look better or worse than reality, sometimes impossible.</p>
+
+<h2>4. Using the wrong detector</h2>
+<p>Noise is a random signal. A peak detector reads it several dB high and exaggerates variation. Use an RMS or sample detector with averaging or trace smoothing, and place markers on a settled part of the trace.</p>
+
+<h2>5. Measuring near the analyzer's noise floor</h2>
+<p>If the DUT's output noise (source OFF) barely exceeds the analyzer's own floor, small errors blow up. Enable the analyzer's preamplifier if it has one, or add a low-noise amplifier between the DUT and the analyzer. Keep the Y-factor of the DUT path well above 1 dB for a trustworthy result.</p>
+
+<h2>6. Compressing the DUT</h2>
+<p>A noise source with 15 dB of ENR delivers a lot of broadband noise power. A high-gain DUT can compress when it sees that noise, which flattens the ON reading and understates Y. Check by inserting a few dB of attenuation ahead of the DUT: the Y-factor should not change much.</p>
+
+<h2>7. A DUT response that isn't flat across the RBW</h2>
+<p>A wide RBW integrates noise over the DUT's gain slope or a filter edge. If the response changes across the RBW, you are measuring an average, not the figure at your centre frequency. Narrow the RBW, accept more averaging, or measure in a flatter part of the band.</p>
+
+<h2>8. Interference and spurs</h2>
+<p>Signals from local oscillators, Wi-Fi, switching supplies, or cell towers can sit inside your measurement bandwidth and raise the OFF or ON reading unevenly. Look at a normal swept spectrum first and pick a quiet frequency. Short, well-shielded cables help.</p>
+
+<h2>9. Mismatch</h2>
+<p>A noise source's output impedance differs slightly between ON and OFF, and a poorly matched DUT makes that variation matter more. A small attenuator at the DUT input improves the match, but its loss adds directly to the noise figure, so use it sparingly and account for it.</p>
+
+<h2>10. Changing the setup between measurements</h2>
+<p>Any change in analyzer settings, attenuation, cables, or reference level between the calibration run and the DUT run shifts the readings. Change only the DUT. Let the noise source and analyzer warm up first, and repeat the measurement to check that it reproduces.</p>
+
+<div class="callout"><p>Quick sanity check: if the corrected noise figure is lower than the DUT datasheet's lowest plausible value, or the calculator reports an unphysical result, start with items 3, 5 and 10.</p></div>
+<p>Follow the <a href="/guides/measure-lna-noise-figure">worked 3.4 GHz measurement</a> for a clean example, then use the <a href="/">calculator</a> on your own readings.</p>
+{% endblock %}
